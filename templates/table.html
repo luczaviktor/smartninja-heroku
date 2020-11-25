@@ -23,7 +23,10 @@
 <body>
 
     <h1>Filmek</h1>
-
+    {% if not name%}
+        {% include "login.html" %}
+    {% endif %}
+    {% if name %}
     <table>
         <tr>
             <th>Cím</th>
@@ -38,6 +41,9 @@
         </tr>
         {% endfor %}
     </table>
-
+        <form method="post" action="/logout">
+            <button type="submit">Kilépés</button>
+        </form>
+    {% endif %}
 </body>
 </html>
