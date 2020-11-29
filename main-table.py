@@ -23,8 +23,27 @@ filmek = [egy, ketto, harom]
 def index():
     return render_template("table.html")
 
-user_dict = {"asd@asd": "asd", "joe@joe": "joe", "email@address.com": "pwd1234"}
+user_dict = {}
 
+def cvs():
+    with open("felhasznalo.csv", 'r') as user_file:
+        content = user_file.read().splitlines()
+        for row in content:
+            (username, pwd) = row.split(",")
+            user_dict[username] = pwd
+        return user_dict
+
+def cvs_iras(username, password):
+    with open("felhasznalo.csv", 'a+') as user_file:
+        content = user_file.read().splitlines()
+        for row in content:
+            (name, pwd) = row.split(",")
+            user_dict[name] = pwd
+        if username is None:
+            pass
+        else:
+            user_dict.update({username: password})
+        user_file.write(str("\n" + username + "," + password))
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -46,6 +65,22 @@ def logout():
     response.set_cookie("user_name", expires=0)
     return response
 
+@app.route("/regisztracio", methods=["POST"])
+def regisztracio():
+    username = request.form.get("username")
+    password = request.form.get("password")
+    cvs_iras(username, password)
+    message = "Sikeresen regisztrált oldalunkon. Most már bejelentkezhet."
+
+    response = make_response(render_template("table.html", message=message))
+
+    return response
+
+@app.route("/regisztracio-oldal", methods=["GET"])
+def regisztracio_oldal():
+    response = make_response(render_template("regisztracio.html"))
+
+    return response
 
 if __name__ == '__main__':
     app.run()
