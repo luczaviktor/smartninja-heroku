@@ -21,12 +21,32 @@
 </head>
 
 <body>
-
-    <h1>Filmek</h1>
     {% if not name%}
-        {% include "login.html" %}
+    <div id="main">
+        <h1>Filmek</h1>
+        {% if not message%}
+        <p>Az oldalunk eléréséhez be kell jelentkeznie az alábbiakban. Ha még nincs fiókja, akkor regisztráció szükséges <a href="/regisztracio-oldal">Az alábbi oldalon.</a></p>
+        <div class="login-box">
+            {% include "login.html" %}
+        </div>
+    {% else %}
+            {{message}}<br>
+            <div class="login-box">
+                {% include "login.html" %}
+            </div>
+        {% endif %}
+    </div>
     {% endif %}
     {% if name %}
+    <div id="menubar">
+        <div>
+            <form method="post" action="/logout">
+                <button class="logout_btn" type="submit">Kijelentkezés</button>
+            </form>
+            <h4 id="menu">{{name}}</h4>
+        </div>
+    </div>
+    <div id="center">
     <table>
         <tr>
             <th>Cím</th>
@@ -41,9 +61,7 @@
         </tr>
         {% endfor %}
     </table>
-        <form method="post" action="/logout">
-            <button type="submit">Kilépés</button>
-        </form>
-    {% endif %}
+    </div>
+        {% endif %}
 </body>
 </html>
